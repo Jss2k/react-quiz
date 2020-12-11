@@ -1,0 +1,25 @@
+.Quiz {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  max-width: 1360px;
+  width: 100%;
+  justify-content: center;
+  padding: 30px 15px;
+  flex-grow: 1;
+  margin: 100px auto;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0px 2px 18px -9px rgba(0,0,0,0.5);
+  height: auto;
+  align-items: center;
+}
+
+.Quiz h1 {
+  color: #000;
+  margin-left: 10px;
+}
+
+.QuizWrapper {
+  max-width: 600px;
+}
