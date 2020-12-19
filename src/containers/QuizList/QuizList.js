@@ -11,12 +11,10 @@ class QuizList extends Component {
   renderQuizes() {
     return this.props.quizes.map((quiz) => {
       return (
-          <NavLink to={'/quiz/' + quiz.id}>
-            <li
-              key={quiz.id}
-            >
-              <h3>{quiz.name}</h3>
-              <p>Какое-то краткое описание теста</p>
+          <NavLink to={'/quiz/' + quiz.id} key={quiz.id}>
+            <li>
+              <h3>{quiz.title}</h3>
+              <p>{quiz.subtitle}</p>
               <div className={styles.QuizCorner}>
               <div className={styles.QuizArrow}>
                 →
