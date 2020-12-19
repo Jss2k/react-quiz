@@ -15,15 +15,15 @@ export function fetchQuizes() {
     dispatch(fetchQuizesStart())
     try {
       const response = await axios.get('/quizes.json')
-
+      
       const quizes = []
-      Object.keys(response.data).forEach((key, index) => {
+      Object.entries(response.data).forEach((obj) => {
         quizes.push({
-          id: key,
-          name: `Тест №${index + 1}`
+          id: `${obj[0]}`,
+          title: `${obj[1][0].title}`,
+          subtitle: `${obj[1][0].subtitle}`
         })
       })
-
       dispatch(fetchQuizesSuccess(quizes))
     } catch (e) {
       dispatch(fetchQuizesError(e))
@@ -125,22 +125,6 @@ export function quizAnswerClick(answerId) {
       //   answerState: {[answerId]: 'success'},
       //   results
       // })
-
-      const timeout = window.setTimeout(() => {
-        if(isQuizFinished(state)) {
-          dispatch(finishQuiz())
-          // this.setState({
-          //   isFinished: true
-          // })
-        } else {
-          dispatch(quizNextQuestion(state.activeQuestion + 1))
-          // this.setState({
-          //   activeQuestion: this.state.activeQuestion + 1,
-          //   answerState: null
-          // })
-        }
-          window.clearTimeout(timeout)
-      }, 1000)
     } else {
       results[question.id] = 'error'
       dispatch(quizSetState({[answerId]: 'error'}, results))
@@ -149,6 +133,21 @@ export function quizAnswerClick(answerId) {
       //   results
       // })
     }
+    const timeout = window.setTimeout(() => {
+      if(isQuizFinished(state)) {
+        dispatch(finishQuiz())
+        // this.setState({
+        //   isFinished: true
+        // })
+      } else {
+        dispatch(quizNextQuestion(state.activeQuestion + 1))
+        // this.setState({
+        //   activeQuestion: this.state.activeQuestion + 1,
+        //   answerState: null
+        // })
+      }
+        window.clearTimeout(timeout)
+    }, 500)
   }
 }
 

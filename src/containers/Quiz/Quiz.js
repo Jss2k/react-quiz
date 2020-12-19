@@ -17,13 +17,16 @@ class Quiz extends Component {
     this.props.retryQuiz()
   }
 
+  // titleQuiz() {
+  //   return Object.values(this.props.quiz)[0].title
+  // }
+
+
   render() {
+
     return (
       <div className={styles.Quiz}>
-
         <div className={styles.QuizWrapper}>
-          <h1>Какое-то название опроса</h1>
-
           {
             this.props.loading || !this.props.quiz
               ? <Loader />
@@ -41,6 +44,7 @@ class Quiz extends Component {
                 answerNumber={this.props.activeQuestion + 1}
                 state={this.props.answerState}
             />
+
           }
         </div>
       </div>
@@ -55,7 +59,7 @@ function mapStateToProps(state) {
     activeQuestion: state.quiz.activeQuestion,
     answerState: state.quiz.answerState,
     quiz: state.quiz.quiz,
-    loading: state.quiz.loading
+    loading: state.quiz.loading,
   }
 }
 

@@ -1,24 +1,29 @@
 import React, {Component} from 'react'
-import styles from './QuizCreator.module.css'
-import Button from '../../components/UI/Button/Button'
-import Input from '../../components/UI/Input/Input'
-import Select from '../../components/UI/Select/Select'
 import {createControl, validate, validateFrom} from '../../form/formFramework'
-import Auxiliary from '../../hoc/Auxiliary/Auxiliary'
 import {createQuizQuestion, finishCreateQuiz} from '../../store/actions/create'
-// import axios from '../../axios/axios-quiz'
 import { connect } from 'react-redux'
+import {QuizCreatorOneStep} from './QuizCreatorOneStep'
+import QuizCreatorTwoStep from './QuizCreatorTwoStep'
+import {QuizCreatorEndStep} from './QuizCreatorEndStep'
 
 function createOptionControl(number) {
   return createControl({
     label: `Вариант ${number}`,
-    errorMessage: 'Значение не,  может быть пустым',
+    errorMessage: 'Значение не может быть пустым',
     id: number
   }, {required: true})
 }
 
-function createFormControls() {
+function createFormInputs() {
   return {
+    title: createControl({
+      label: 'Введите название опроса',
+      errorMessage: 'Вопрос не может быть пустым'
+    }, {required: true}),
+    subtitle: createControl({
+      label: 'Введите краткое описание',
+      errorMessage: 'Описание не может быть пустым'
+    }, {required: true}),
     question: createControl({
       label: 'Введите вопрос',
       errorMessage: 'Вопрос не может быть пустым'
@@ -29,13 +34,27 @@ function createFormControls() {
     option4: createOptionControl(4)
   }
 }
-
 class QuizCreator extends Component {
 
   state = {
+    step: 1,
     isFormValid: false,
     rightAnswerId: 1,
-    formControls: createFormControls()
+    formControls: createFormInputs(),
+  }
+
+  nextStep = () => {
+    const { step } = this.state;
+    this.setState({
+      step: step + 1
+    })
+  }
+
+  prevStep = () => {
+    const { step } = this.state;
+    this.setState({
+      step: step - 2
+    })
   }
 
   submitHandler = event => {
@@ -48,9 +67,11 @@ class QuizCreator extends Component {
     // const quiz = this.state.quiz.concat()
     // const index = quiz.length + 1
 
-    const {question, option1, option2, option3, option4} = this.state.formControls
+    const {title, subtitle, question, option1, option2, option3, option4} = this.state.formControls
 
     const questionItem = {
+      title: title.value,
+      subtitle: subtitle.value,
       question: question.value,
       id: this.props.quiz.length + 1,
       rightAnswerId: this.state.rightAnswerId,
@@ -69,20 +90,21 @@ class QuizCreator extends Component {
       // quiz,
       isFormValid: false,
       rightAnswerId: 1,
-      formControls: createFormControls()
+      formControls: createFormInputs(),
     })
   }
 
   createQuestionHandler = (event) => {
     event.preventDefault()
-
+    const { step } = this.state;
     // try {
       // axios.post('/quizes.json', this.state.quiz)
       
       this.setState({
+        step: step + 1,
         isFormValid: false,
         rightAnswerId: 1,
-        formControls: createFormControls()
+        formControls: createFormInputs(),
       })
       this.props.finishCreateQuiz()
 
@@ -115,26 +137,9 @@ class QuizCreator extends Component {
     })
   }
 
-  renderControls() {
-    return Object.keys(this.state.formControls).map((controlName, index) => {
-      const control = this.state.formControls[controlName]
 
-      return (
-        <Auxiliary key={controlName + index}>
-        <Input
-            label={control.label}
-            value={control.value}
-            valid={control.valid}
-            shouldValidate={!!control.validation}
-            touched={control.touched}
-            errorMessage={control.errorMessage}
-            onChange={event => this.changeHandler(event.target.value, controlName)}
-          />
-          { index === 0 ? <hr /> : null}
-        </Auxiliary>
-      )
-    })
-  }
+
+
 
   selectChangeHandler = event => {
     this.setState({
@@ -143,47 +148,41 @@ class QuizCreator extends Component {
   }
 
   render() {
-    const select = <Select
-      label="Выберите правильный ответ"
-      value={this.state.rightAnswerId}
-      onChange={this.selectChangeHandler}
-      options={[
-        {text: 1, value: 1},
-        {text: 2, value: 2},
-        {text: 3, value: 3},
-        {text: 4, value: 4}
-      ]}
-    />
+    const { step } = this.state
 
-    return (
-      <div className={styles.QuizCreator}>
-        <div>
-           <h1>Создание теста</h1>
-
-          <form onSubmit={this.submitHandler}>
-
-            { this.renderControls() }
-
-            { select }
-
-            <Button
-              type="primary"
-              onClick={this.addQuestionHandler}
-              disabled={!this.state.isFormValid}
-            >
-              Добавить вопрос
-            </Button>
-            <Button
-              type="success"
-              onClick={this.createQuestionHandler}
-              disabled={this.props.quiz.length === 0}
-            >
-              Создать тест
-            </Button>
-          </form>
-        </div>
-      </div>
-    )
+    switch(step) {
+      case 1:
+        return (
+          <QuizCreatorOneStep
+            nextStep={this.nextStep}
+            changeHandler={this.changeHandler}
+            formControls={this.state.formControls}
+            submitHandler={this.submitHandler}
+  
+          />
+        )
+        case 2:
+          return (
+            <QuizCreatorTwoStep
+            nextStep={this.nextStep}
+            changeHandler={this.changeHandler}
+            formControls={this.state.formControls}
+            submitHandler={this.submitHandler}
+            addQuestionHandler={this.addQuestionHandler}
+            createQuestionHandler={this.createQuestionHandler}
+            rightAnswerId={this.state.rightAnswerId}
+            selectChangeHandler={this.selectChangeHandler}
+          />
+          )
+        case 3:
+          return (
+            <QuizCreatorEndStep
+            prevStep={this.prevStep}
+          />
+          )
+          default:
+            console.log("Sorry, we are out of ")
+    }
   }
 }
 
