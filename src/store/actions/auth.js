@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {AUTH_SUCCESS, AUTH_LOGOUT} from './actionTypes'
+import {AUTH_SUCCESS, AUTH_LOGOUT, AUTH_ERROR} from './actionTypes'
 
 export function auth(email, password, isLogin) {
   return async dispatch => {
@@ -9,23 +9,26 @@ export function auth(email, password, isLogin) {
       returnSecureToken: true
     }
 
-    let url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDxMII56u89O6ik2cafRRBAGwFGCIs-VSk'
-
+    let url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=key'
     if (isLogin) {
-      url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDxMII56u89O6ik2cafRRBAGwFGCIs-VSk'
+      url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=key'
     }
+    try {
+      const response = await axios.post(url, authData)
+      const data = response.data
 
-    const response = await axios.post(url, authData)
-    const data = response.data
-
-    const expirationDate = new Date(new Date().getTime() + data.expiresIn * 1000)
-
-    localStorage.setItem('token', data.idToken)
-    localStorage.setItem('userID', data.localId)
-    localStorage.setItem('expirationDate', expirationDate)
-
-    dispatch(authSuccess(data.idToken))
-    dispatch(autoLogout(data.expiresIn))
+      const expirationDate = new Date(new Date().getTime() + data.expiresIn * 1000)
+    
+      localStorage.setItem('token', data.idToken)
+      localStorage.setItem('userID', data.localId)
+      localStorage.setItem('expirationDate', expirationDate)
+    
+      dispatch(authSuccess(data.idToken))
+      dispatch(autoLogout(data.expiresIn))
+      dispatch(authError(''))
+    } catch(error) {
+        dispatch(authError(error.response.status))
+    }
   }
 }
 
@@ -67,5 +70,12 @@ export function authSuccess(token) {
   return {
     type: AUTH_SUCCESS,
     token
+  }
+}
+
+export function authError(err) {
+  return {
+    type: AUTH_ERROR,
+    error: err
   }
 }

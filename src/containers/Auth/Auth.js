@@ -2,8 +2,8 @@ import React, {Component} from 'react'
 import styles from './Auth.module.css'
 import Button from '../../components/UI/Button/Button'
 import Input from '../../components/UI/Input/Input'
-import is from 'is_js'
 // import axios from 'axios'
+import is from 'is_js'
 import {auth} from '../../store/actions/auth'
 import { connect } from 'react-redux'
 
@@ -51,6 +51,9 @@ class Auth extends Component {
       this.state.formControls.password.value,
       true
     )
+    this.setState({
+      error: null
+    })
     // const authData = {
     //   email: this.state.formControls.email.value,
     //   password: this.state.formControls.password.value,
@@ -63,6 +66,7 @@ class Auth extends Component {
     // } catch (e) {
     //   console.log(e)
     // }
+    
   }
 
   registerHandler = () => {
@@ -159,7 +163,13 @@ class Auth extends Component {
           <h1>Авторизация</h1>
 
           <form onSubmit={this.submitHandler} className={styles.AuthForm}>
-
+            
+              {(this.props.error === 400)
+                ? <div className={styles.AuthError}>
+               Неверный логин или пароль. Проверьте ещё раз правильность введённых данных
+                </div>
+                : null}
+            
             { this.renderInputs() }
 
             <Button
@@ -183,11 +193,18 @@ class Auth extends Component {
   }
 }
 
+function mapStateToProps(state) {
+  return {
+    error: state.auth.error,
+    quiz: state.create.quiz
+  }
+}
+
 function mapDispatchToProps(dispatch) {
   return {
     auth: (email, password, isLogin) => dispatch(auth(email, password, isLogin))
   }
 }
 
-export default connect(null, mapDispatchToProps)(Auth)
+export default connect(mapStateToProps, mapDispatchToProps)(Auth)
 

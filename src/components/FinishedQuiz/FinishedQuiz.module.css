@@ -12,6 +12,10 @@
   margin: 0;
 }
 
+.FinishedQuiz ul li{
+  padding: 5px;
+}
+
 .FinishedQuiz ul li i {
   margin-left: 10px;
 }

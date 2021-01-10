@@ -1,14 +1,19 @@
 .Auth {
+  position: absolute;
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  padding-top: 100px;
-  margin: 100px auto;
+  padding: 30px 15px;
+  margin: auto;
   flex-grow: 1;
   max-width: 1360px;
   width: 100%;
   border-radius: 8px;
   box-shadow: 0px 2px 18px -9px rgba(0,0,0,0.5);
   background: #fff;
+  height: auto;
+  top: 0; left: 0; bottom: 0; right: 0;
 }
 
 .Auth > div {
@@ -18,7 +23,7 @@
 }
 
 .Auth h1 {
-  color: #fff;
+  color: #000;
   text-align: center;
 }
 
@@ -27,4 +32,10 @@
   box-shadow: 2px 2px 1px rgba(0, 0, 0, .5);
   padding: 15px;
   border-radius: 5px;
+}
+
+.AuthError {
+  color: #bb2430;
+  background-color: rgba(219, 71, 71, 0.5);
+  padding: 5px;
 }

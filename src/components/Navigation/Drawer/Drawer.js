@@ -33,7 +33,7 @@ class Drawer extends Component {
     }
 
     const links = [
-      {to: '/', label: 'Список', exact: true}
+      {to: '/', label: 'Список тестов', exact: true}
     ]
 
     if (this.props.isAuthenticated) {
