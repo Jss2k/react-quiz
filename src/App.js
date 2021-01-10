@@ -8,6 +8,7 @@ import QuizList from './containers/QuizList/QuizList'
 import {connect} from 'react-redux'
 import Logout from './components/Logout/Logout'
 import {autoLogin} from './store/actions/auth'
+import {CSSTransition, TransitionGroup} from 'react-transition-group'
 
 class App extends Component {
 
@@ -18,29 +19,49 @@ class App extends Component {
   render() {
 
     let routes = (
-    <Switch>
-      <Route path="/auth" component={Auth} />
-      <Route path="/quiz/:id" component={Quiz} />
-      <Route path="/" exact component={QuizList} />
-      <Redirect to="/" />
-    </Switch>
+      <Route render={({location}) => (
+        <TransitionGroup>
+          <CSSTransition
+            key={location.key}
+            timeout={450}
+            classNames="fade"
+          >
+            <Switch location={location}>
+              <Route path="/auth" component={Auth} />
+              <Route path="/quiz/:id" component={Quiz} />
+              <Route path="/" exact component={QuizList} />
+              <Redirect to="/" />
+            </Switch>
+            </CSSTransition>
+          </TransitionGroup>
+        )} />
     )
 
     if (this.props.isAuthenticated) {
       routes = (
-      <Switch>
-        <Route path="/quiz-creator" component={QuizCreator} />
-        <Route path="/quiz/:id" component={Quiz} />
-        <Route path="/logout" component={Logout} />
-        <Route path="/" exact component={QuizList} />
-        <Redirect to="/" />
-      </Switch>
+        <Route render={({location}) => (
+          <TransitionGroup>
+            <CSSTransition
+              key={location.key}
+              timeout={450}
+              classNames="fade"
+            >
+              <Switch location={location}>
+                <Route path="/quiz-creator" component={QuizCreator} />
+                <Route path="/quiz/:id" component={Quiz} />
+                <Route path="/logout" component={Logout} />
+                <Route path="/" exact component={QuizList} />
+                <Redirect to="/" />
+              </Switch>
+            </CSSTransition>
+          </TransitionGroup>
+        )} />
       )
     }
 
     return (
       <Layout>
-          { routes }
+              { routes }
       </Layout>
     )
   }

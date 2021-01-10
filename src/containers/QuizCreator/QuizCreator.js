@@ -158,7 +158,6 @@ class QuizCreator extends Component {
             changeHandler={this.changeHandler}
             formControls={this.state.formControls}
             submitHandler={this.submitHandler}
-  
           />
         )
         case 2:
@@ -181,7 +180,14 @@ class QuizCreator extends Component {
           />
           )
           default:
-            console.log("Sorry, we are out of ")
+            return (
+              <QuizCreatorOneStep
+                nextStep={this.nextStep}
+                changeHandler={this.changeHandler}
+                formControls={this.state.formControls}
+                submitHandler={this.submitHandler}
+              />
+            )
     }
   }
 }

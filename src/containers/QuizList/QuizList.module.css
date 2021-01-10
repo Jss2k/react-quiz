@@ -1,17 +1,18 @@
 .QuizList {
   display: flex;
   flex-direction: column;
-  position: relative;
+  position: absolute;
   max-width: 1360px;
   width: 100%;
   justify-content: center;
   padding: 30px 15px;
   flex-grow: 1;
-  margin: 100px auto;
+  margin: auto;
   background: #fff;
   border-radius: 8px;
   box-shadow: 0px 2px 18px -9px rgba(0,0,0,0.5);
   height: auto;
+  top: 0; left: 0; bottom: 0; right: 0;
 }
 
 .QuizList h1 {
@@ -66,6 +67,7 @@ color: rgba(255, 255, 255, 0.8);
   text-decoration: none;
   z-index: 0;
   overflow: hidden;
+  min-height: 14rem;
 }
 
 

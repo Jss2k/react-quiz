@@ -7,6 +7,7 @@ import Loader from '../../components/UI/Loader/Loader'
 import { connect } from 'react-redux'
 import {fetchQuizById, quizAnswerClick, retryQuiz} from '../../store/actions/quiz'
 
+
 class Quiz extends Component {
 
   componentDidMount() {
@@ -65,6 +66,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+
     fetchQuizById: id => dispatch(fetchQuizById(id)),
     quizAnswerClick: answerId => dispatch(quizAnswerClick(answerId)),
     retryQuiz: () => dispatch(retryQuiz())
